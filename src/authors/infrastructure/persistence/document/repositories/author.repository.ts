@@ -6,9 +6,10 @@ import { QueryAuthorDto } from '../../../../dto/query-author.dto';
 import { AuthorSchemaClass } from '../entities/author.schema';
 import { AuthorMapper } from '../mapper/authoer.mapper';
 import { NullableType } from 'src/utils/types/nullable.type';
+import { AuthorRepository } from '../../author.repository';
 
 @Injectable()
-export class AuthorRepository {
+export class AuthorDocumentRepository implements AuthorRepository {
   constructor(
     @InjectModel(AuthorSchemaClass.name)
     private readonly authorModel: Model<AuthorSchemaClass>,

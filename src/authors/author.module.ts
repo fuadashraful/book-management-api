@@ -3,13 +3,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthorsController } from './author.controller';
 import { AuthorsService } from './author.service';
 import { AuthorSchemaClass, AuthorSchema } from './infrastructure/persistence/document/entities/author.schema';
+import { DocumentAuthorPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: AuthorSchemaClass.name, schema: AuthorSchema }]),
+    // import modules, etc.
+    DocumentAuthorPersistenceModule,
   ],
   controllers: [AuthorsController],
   providers: [AuthorsService],
-  exports: [AuthorsService],
+  exports: [AuthorsService, DocumentAuthorPersistenceModule],
 })
 export class AuthorsModule {}

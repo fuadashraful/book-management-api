@@ -8,7 +8,7 @@ import { NullableType } from '../utils/types/nullable.type';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { QueryAuthorDto } from './dto/query-author.dto';
-import { AuthorRepository } from './infrastructure/persistence/document/repositories/author.repository';
+import { AuthorRepository } from './infrastructure/persistence/author.repository';
 import { Author } from './domain/author';
 
 @Injectable()
