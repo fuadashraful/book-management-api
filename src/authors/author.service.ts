@@ -5,10 +5,9 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { NullableType } from '../utils/types/nullable.type';
-import { IPaginationOptions } from '../utils/types/pagination-options';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-import { FilterAuthorDto, SortAuthorDto } from './dto/query-author.dto';
+import { QueryAuthorDto } from './dto/query-author.dto';
 import { AuthorRepository } from './infrastructure/persistence/document/repositories/author.repository';
 import { Author } from './domain/author';
 
@@ -40,20 +39,8 @@ export class AuthorsService {
     });
   }
 
-  findManyWithPagination({
-    filterOptions,
-    sortOptions,
-    paginationOptions,
-  }: {
-    filterOptions?: FilterAuthorDto | null;
-    sortOptions?: SortAuthorDto[] | null;
-    paginationOptions: IPaginationOptions;
-  }): Promise<Author[]> {
-    return this.authorsRepository.findManyWithPagination({
-      filterOptions,
-      sortOptions,
-      paginationOptions,
-    });
+  async findManyWithPagination(queryDto: QueryAuthorDto): Promise<Author[]> {
+    return this.authorsRepository.findManyWithPagination(queryDto);
   }
 
 

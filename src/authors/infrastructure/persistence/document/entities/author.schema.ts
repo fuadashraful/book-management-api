@@ -1,28 +1,49 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { HydratedDocument, now } from 'mongoose';
+import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
 
-@Schema({ timestamps: true })
-export class Author extends Document {
-  @Prop({ required: true, unique: true })
-  id: string;
+export type AuthorDocument = HydratedDocument<AuthorSchemaClass>;
 
-  @Prop({ required: true })
+@Schema({
+  timestamps: true, // automatically adds createdAt and updatedAt
+  toJSON: {
+    virtuals: true,
+    getters: true,
+  },
+})
+export class AuthorSchemaClass extends EntityDocumentHelper {
+  @Prop({
+    type: String,
+    required: true,
+  })
   firstName: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: String,
+    required: true,
+  })
   lastName: string;
 
-  @Prop()
-  bio?: string;
+  @Prop({
+    type: String,
+    default: null,
+  })
+  bio?: string | null;
 
-  @Prop()
-  birthDate?: Date;
+  @Prop({
+    type: Date,
+    default: null,
+  })
+  birthDate?: Date | null;
 
-  @Prop({ default: Date.now })
+  @Prop({ default: now })
   createdAt: Date;
 
-  @Prop({ default: Date.now })
+  @Prop({ default: now })
   updatedAt: Date;
 }
 
-export const AuthorSchema = SchemaFactory.createForClass(Author);
+export const AuthorSchema = SchemaFactory.createForClass(AuthorSchemaClass);
+
+// Optional: create indexes if needed
+// AuthorSchema.index({ firstName: 1, lastName: 1 });

@@ -15,7 +15,8 @@ import { ApiTags, ApiOkResponse, ApiCreatedResponse, ApiParam } from '@nestjs/sw
 import { AuthorsService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-import { Author } from './infrastructure/persistence/document/entities/author.schema';
+import { AuthorSchemaClass } from './infrastructure/persistence/document/entities/author.schema';
+import { Author } from './domain/author';
 
 @ApiTags('Authors')
 @Controller('authors')
