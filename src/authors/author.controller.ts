@@ -17,6 +17,9 @@ import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorSchemaClass } from './infrastructure/persistence/document/entities/author.schema';
 import { Author } from './domain/author';
+import { infinityPagination } from '../utils/infinity-pagination';
+import { InfinityPaginationResponse, InfinityPaginationResponseDto } from 'src/utils/dto/infinity-pagination-response.dto';
+import { QueryAuthorDto } from './dto/query-author.dto';
 
 @ApiTags('Authors')
 @Controller('authors')
@@ -30,15 +33,21 @@ export class AuthorsController {
   }
 
 
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(Author),
+  })
   @Get()
-  @ApiOkResponse({ type: [Author] })
+  @HttpCode(HttpStatus.OK)
   async findAll(
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
-    @Query('search') search?: string,
-  ): Promise<{ data: Author[]; total: number; page: number; limit: number }> {
-    limit = Math.min(limit, 50);
-    return this.authorsService.findAll({ page, limit, search });
+    @Query() query: QueryAuthorDto,
+  ): Promise<InfinityPaginationResponseDto<Author>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) limit = 50;
+
+    const authors = await this.authorsService.findManyWithPagination(query);
+
+    return infinityPagination(authors, { page, limit });
   }
 
 
@@ -66,8 +75,7 @@ export class AuthorsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiParam({ name: 'id', type: String })
-  async remove(@Param('id') id: string): Promise<void> {
-    const deleted = await this.authorsService.remove(id);
-    if (!deleted) throw new NotFoundException(`Author with ID "${id}" not found`);
+  remove(@Param('id') id: string): Promise<void> {
+    return this.authorsService.remove(id);
   }
 }
