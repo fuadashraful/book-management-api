@@ -32,7 +32,6 @@ export class AuthorsController {
     return this.authorsService.create(createAuthorDto);
   }
 
-
   @ApiOkResponse({
     type: InfinityPaginationResponse(Author),
   })
