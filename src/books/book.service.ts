@@ -10,7 +10,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { QueryBookDto } from './dto/query-book.dto';
 import { BookRepository } from './infrastructure/book-abstract.repository';
-import { AuthorRepository } from 'src/authors/infrastructure/persistence/author.repository';
+import { AuthorRepository } from '../authors/infrastructure/persistence/author.repository';
 import { Book } from './domain/book';
 
 @Injectable()
