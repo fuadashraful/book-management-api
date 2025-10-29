@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { Book } from 'src/books/domain/book';
 import { BookSchemaClass } from '../entities/book.schema';
+import { AuthorMapper } from 'src/authors/infrastructure/persistence/document/mapper/authoer.mapper';
 
 export class BookMapper {
   static toDomain(raw: BookSchemaClass): Book {
@@ -12,7 +13,7 @@ export class BookMapper {
     domainEntity.genre = raw.genre ?? null;
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
-    domainEntity.authorId = raw.author?.toString() ?? null;
+    domainEntity.author = AuthorMapper.toDomain(raw.author as any) ?? null;
 
     return domainEntity;
   }

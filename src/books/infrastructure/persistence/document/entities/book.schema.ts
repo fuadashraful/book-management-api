@@ -24,10 +24,6 @@ export class BookSchemaClass extends EntityDocumentHelper {
     type: String,
     required: true,
     unique: true,
-    match: [
-      /^(97(8|9))?\d{9}(\d|X)$/,
-      'Please provide a valid ISBN number (e.g., 978-3-16-148410-0)',
-    ],
   })
   isbn: string;
 
