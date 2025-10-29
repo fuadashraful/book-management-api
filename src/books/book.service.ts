@@ -33,10 +33,10 @@ export class BooksService {
       });
     }
 
-    // Optional: prevent duplicate ISBN
     const existingBook = await this.booksRepository.findByIsbn(
       createBookDto.isbn,
     );
+
     if (existingBook) {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,

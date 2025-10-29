@@ -32,7 +32,7 @@ import {
 import { infinityPagination } from '../utils/infinity-pagination';
 
 @ApiTags('Books')
-@Controller('books')
+@Controller('v1/books')
 export class BooksController {
   constructor(
     private readonly booksService: BooksService,
