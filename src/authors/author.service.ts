@@ -43,7 +43,6 @@ export class AuthorsService {
     return this.authorsRepository.findManyWithPagination(queryDto);
   }
 
-
   async findById(id: Author['id']): Promise<NullableType<Author>> {
     const author = await this.authorsRepository.findById(id);
     if (!author) {
@@ -56,7 +55,6 @@ export class AuthorsService {
     }
     return author;
   }
-
 
   async update(
     id: Author['id'],
@@ -79,7 +77,6 @@ export class AuthorsService {
       birthDate: updateAuthorDto.birthDate ?? author.birthDate,
     });
   }
-
 
   async remove(id: Author['id']): Promise<void> {
     const author = await this.authorsRepository.findById(id);
