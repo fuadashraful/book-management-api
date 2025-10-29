@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Author } from '../../../../domain/author';
 import { QueryAuthorDto } from '../../../../dto/query-author.dto';
 import { AuthorSchemaClass } from '../entities/author.schema';
+import { BookSchemaClass } from 'src/books/infrastructure/persistence/document/entities/book.schema';
 import { AuthorMapper } from '../mapper/authoer.mapper';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { AuthorRepository } from '../../author.repository';
@@ -13,6 +18,8 @@ export class AuthorDocumentRepository implements AuthorRepository {
   constructor(
     @InjectModel(AuthorSchemaClass.name)
     private readonly authorModel: Model<AuthorSchemaClass>,
+    @InjectModel(BookSchemaClass.name)
+    private readonly bookModel: Model<BookSchemaClass>,
   ) {}
 
   async create(payload: Partial<Author>): Promise<Author> {
@@ -27,7 +34,10 @@ export class AuthorDocumentRepository implements AuthorRepository {
     return userObject ? AuthorMapper.toDomain(userObject) : null;
   }
 
-  async findByName(firstName: string, lastName: string): Promise<Author | null> {
+  async findByName(
+    firstName: string,
+    lastName: string,
+  ): Promise<Author | null> {
     const authorObj = await this.authorModel.findOne({
       firstName: { $regex: `^${firstName}$`, $options: 'i' },
       lastName: { $regex: `^${lastName}$`, $options: 'i' },
@@ -48,21 +58,28 @@ export class AuthorDocumentRepository implements AuthorRepository {
         `${firstName ?? ''}${lastName ? ' ' + lastName : ''}`,
         'i',
       );
-      query.$or = [
-        { firstName: searchRegex },
-        { lastName: searchRegex },
-      ];
+      query.$or = [{ firstName: searchRegex }, { lastName: searchRegex }];
     }
 
     // Default sorting by newest
     const sort: Record<string, 1 | -1> = { createdAt: -1 };
 
-    const authorObjects = await this.authorModel.find(query).sort(sort).skip(skip).limit(limit).exec();
+    const authorObjects = await this.authorModel
+      .find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec();
 
-    return authorObjects.map((authorObject) => AuthorMapper.toDomain(authorObject));
+    return authorObjects.map((authorObject) =>
+      AuthorMapper.toDomain(authorObject),
+    );
   }
 
-  async update(id: Author['id'], payload: Partial<Author>): Promise<Author | null> {
+  async update(
+    id: Author['id'],
+    payload: Partial<Author>,
+  ): Promise<Author | null> {
     const clonedPayload = { ...payload };
     delete clonedPayload.id;
 
@@ -87,6 +104,20 @@ export class AuthorDocumentRepository implements AuthorRepository {
   }
 
   async remove(id: string): Promise<void> {
-    await this.authorModel.findByIdAndDelete(id).exec();
+    const bookExists = await this.bookModel.exists({
+      author: new Types.ObjectId(id),
+    });
+
+    if (bookExists) {
+      throw new BadRequestException(
+        'Cannot delete author: there are books associated with this author',
+      );
+    }
+
+    const result = await this.authorModel.findByIdAndDelete(id).exec();
+
+    if (!result) {
+      throw new NotFoundException(`Author with ID ${id} not found`);
+    }
   }
 }
