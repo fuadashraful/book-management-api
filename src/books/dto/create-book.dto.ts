@@ -30,7 +30,7 @@ export class CreateBookDto {
   })
   @IsOptional()
   @IsDateString()
-  publishedDate?: string;
+  publishedDate: string;
 
   @ApiProperty({
     example: 'Science Fiction',

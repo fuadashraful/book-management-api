@@ -21,8 +21,9 @@ export class BooksService {
   ) {}
 
   async create(createBookDto: CreateBookDto): Promise<Book> {
-    // Validate that the author exists
-    const author = await this.authorsRepository.findById(createBookDto.authorId);
+    const author = await this.authorsRepository.findById(
+      createBookDto.authorId,
+    );
     if (!author) {
       throw new BadRequestException({
         status: HttpStatus.BAD_REQUEST,
@@ -33,7 +34,9 @@ export class BooksService {
     }
 
     // Optional: prevent duplicate ISBN
-    const existingBook = await this.booksRepository.findByIsbn(createBookDto.isbn);
+    const existingBook = await this.booksRepository.findByIsbn(
+      createBookDto.isbn,
+    );
     if (existingBook) {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -46,7 +49,7 @@ export class BooksService {
     return this.booksRepository.create({
       title: createBookDto.title,
       isbn: createBookDto.isbn,
-      publishedDate: createBookDto.publishedDate ?? null,
+      publishedDate: new Date(createBookDto.publishedDate) ?? null,
       genre: createBookDto.genre ?? null,
       authorId: createBookDto.authorId,
     });
@@ -69,7 +72,10 @@ export class BooksService {
     return book;
   }
 
-  async update(id: Book['id'], updateBookDto: UpdateBookDto): Promise<Book | null> {
+  async update(
+    id: Book['id'],
+    updateBookDto: UpdateBookDto,
+  ): Promise<Book | null> {
     const book = await this.booksRepository.findById(id);
     if (!book) {
       throw new NotFoundException({
@@ -82,7 +88,9 @@ export class BooksService {
 
     // Validate authorId if updating
     if (updateBookDto.authorId) {
-      const author = await this.authorsRepository.findById(updateBookDto.authorId);
+      const author = await this.authorsRepository.findById(
+        updateBookDto.authorId,
+      );
       if (!author) {
         throw new BadRequestException({
           status: HttpStatus.BAD_REQUEST,
@@ -96,9 +104,11 @@ export class BooksService {
     return this.booksRepository.update(id, {
       title: updateBookDto.title ?? book.title,
       isbn: updateBookDto.isbn ?? book.isbn,
-      publishedDate: updateBookDto.publishedDate ?? book.publishedDate,
+      publishedDate: updateBookDto.publishedDate
+        ? new Date(updateBookDto.publishedDate)
+        : book.publishedDate,
       genre: updateBookDto.genre ?? book.genre,
-      authorId: updateBookDto.authorId ?? book.authorId,
+      authorId: updateBookDto.authorId ?? book.author?.id,
     });
   }
 

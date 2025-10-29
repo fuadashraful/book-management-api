@@ -6,7 +6,7 @@ import { QueryBookDto } from '../../../../dto/query-book.dto';
 import { BookSchemaClass } from '../entities/book.schema';
 import { BookMapper } from '../mapper/book.mapper';
 import { NullableType } from 'src/utils/types/nullable.type';
-import { BookRepository } from '../../book.repository';
+import { BookRepository } from 'src/books/infrastructure/book-abstract.repository';
 
 @Injectable()
 export class BookDocumentRepository implements BookRepository {
@@ -23,7 +23,10 @@ export class BookDocumentRepository implements BookRepository {
   }
 
   async findById(id: Book['id']): Promise<NullableType<Book>> {
-    const bookObject = await this.bookModel.findById(id).populate('author').exec();
+    const bookObject = await this.bookModel
+      .findById(id)
+      .populate('author')
+      .exec();
     return bookObject ? BookMapper.toDomain(bookObject) : null;
   }
 
@@ -70,14 +73,16 @@ export class BookDocumentRepository implements BookRepository {
     const book = await this.bookModel.findOne(filter);
     if (!book) return null;
 
-    const updatedBook = await this.bookModel.findOneAndUpdate(
-      filter,
-      BookMapper.toPersistence({
-        ...BookMapper.toDomain(book),
-        ...clonedPayload,
-      }),
-      { new: true },
-    ).populate('author');
+    const updatedBook = await this.bookModel
+      .findOneAndUpdate(
+        filter,
+        BookMapper.toPersistence({
+          ...BookMapper.toDomain(book),
+          ...clonedPayload,
+        }),
+        { new: true },
+      )
+      .populate('author');
 
     return updatedBook ? BookMapper.toDomain(updatedBook) : null;
   }

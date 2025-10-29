@@ -21,7 +21,7 @@ export class Book {
     example: '2023-05-15',
     description: 'Publication date of the book',
   })
-  publishedDate?: Date | null;
+  publishedDate: Date | null;
 
   @ApiProperty({
     type: String,
@@ -35,7 +35,14 @@ export class Book {
     type: () => Author,
     description: 'Author of the book',
   })
-  author: Author;
+  author?: Author;
+
+  @ApiProperty({
+    type: String,
+    example: '653b4e9a2f4e8a001234abcd',
+    description: 'ID of the author of the book',
+  })
+  authorId: string;
 
   @ApiProperty({
     type: Date,
