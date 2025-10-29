@@ -67,3 +67,16 @@ This project is ideal for applications that require library management, book cat
 git clone https://github.com/your-username/book-management.git
 cd book-management
 npm install
+```
+
+## API Documentation (Swagger)
+
+This project includes interactive API documentation powered by **Swagger (OpenAPI)**.
+
+After starting the application, you can explore and test all available API endpoints directly from your browser.
+
+### Accessing Swagger
+
+Once the server is running, open your browser and go to:
+n.b: swagger is enabled in development environment
+[http://localhost:3000/api-docs](http://localhost:3000/api-docs)
