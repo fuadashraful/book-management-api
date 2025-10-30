@@ -6,6 +6,7 @@ import { AppModule } from '../../src/app.module';
 describe('Book Management E2E', () => {
   let app: INestApplication;
   let authorId: string;
+  let bookId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -25,6 +26,18 @@ describe('Book Management E2E', () => {
   });
 
   afterAll(async () => {
+    if (bookId) {
+      await request(app.getHttpServer())
+        .delete(`/v1/books/${bookId}`)
+        .expect(204);
+    }
+
+    if (authorId) {
+      await request(app.getHttpServer())
+        .delete(`/v1/authors/${authorId}`)
+        .expect(204);
+    }
+
     await app.close();
   });
 
@@ -33,7 +46,7 @@ describe('Book Management E2E', () => {
       firstName: 'J.K.',
       lastName: 'Rowling',
       bio: 'British author, best known for the Harry Potter series.',
-      birthDate: '1965-07-20',
+      birthDate: '1965-07-31',
     };
 
     const response = await request(app.getHttpServer())
@@ -52,7 +65,7 @@ describe('Book Management E2E', () => {
     const createBookDto = {
       title: "Harry Potter and the Philosopher's Stone",
       isbn: '9780747532699',
-      publishedDate: '1997-06-26',
+      publishedDate: '1997-06-26T00:00:00.000Z',
       genre: 'Fantasy',
       authorId: authorId,
     };
@@ -64,7 +77,9 @@ describe('Book Management E2E', () => {
 
     expect(response.body).toHaveProperty('id');
     expect(response.body.title).toBe(createBookDto.title);
-    expect(response.body.authorId).toBe(authorId);
+    expect(response.body?.author?.id).toBe(authorId);
+
+    bookId = response.body.id;
   });
 
   it('should get all books and include the created one', async () => {
@@ -72,7 +87,8 @@ describe('Book Management E2E', () => {
       .get('/v1/books')
       .expect(200);
 
-    const books = response.body;
+    const books = response.body?.data;
+
     expect(Array.isArray(books)).toBe(true);
 
     const foundBook = books.find(
@@ -80,6 +96,6 @@ describe('Book Management E2E', () => {
     );
 
     expect(foundBook).toBeDefined();
-    expect(foundBook.authorId).toBe(authorId);
+    expect(foundBook?.author?.id).toBe(authorId);
   });
 });
