@@ -14,6 +14,24 @@ services:
     networks:
       - app
 
+  book-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: book-management-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - app
 volumes:
   mongo_data:
 
