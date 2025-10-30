@@ -19,6 +19,14 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: book_management_user_pass
           MONGO_INITDB_DATABASE: book_management_db
 
+    env:
+      DATABASE_TYPE: mongodb
+      DATABASE_HOST: localhost
+      DATABASE_PORT: 27017
+      DATABASE_USERNAME: book_management_api_user
+      DATABASE_PASSWORD: book_management_user_pass
+      DATABASE_NAME: book_management_db
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -26,26 +34,37 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 24
+          node-version: 20
 
       - name: Install dependencies
         run: npm ci
 
       - name: Wait for MongoDB to be ready
         run: |
-          for i in {1..10}; do
+          for i in {1..20}; do
             mongosh "$MONGO_URI" --eval "db.adminCommand({ ping: 1 })" && break
             echo "Waiting for MongoDB..."
             sleep 3
           done
 
-      - name: Run E2E tests
+      - name: Run Unit Tests
+        run: npm run test
+        env:
+          DATABASE_TYPE: ${{ env.DATABASE_TYPE }}
+          DATABASE_HOST: ${{ env.DATABASE_HOST }}
+          DATABASE_PORT: ${{ env.DATABASE_PORT }}
+          DATABASE_USERNAME: ${{ env.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+          DATABASE_NAME: ${{ env.DATABASE_NAME }}
+          MONGO_URI: ${{ env.MONGO_URI }}
+
+      - name: Run E2E Tests
         run: npm run test:e2e
         env:
-          DATABASE_TYPE: mongodb
-          DATABASE_PORT: 27017
-          DATABASE_USERNAME: book_management_api_user
-          DATABASE_PASSWORD: book_management_user_pass
-          DATABASE_NAME: book_management_db
-          DATABASE_URL: mongodb://mongodb:27017
-
+          DATABASE_TYPE: ${{ env.DATABASE_TYPE }}
+          DATABASE_HOST: ${{ env.DATABASE_HOST }}
+          DATABASE_PORT: ${{ env.DATABASE_PORT }}
+          DATABASE_USERNAME: ${{ env.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+          DATABASE_NAME: ${{ env.DATABASE_NAME }}
+          MONGO_URI: ${{ env.MONGO_URI }}
