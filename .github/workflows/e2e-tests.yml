@@ -26,6 +26,7 @@ jobs:
       DATABASE_USERNAME: book_management_api_user
       DATABASE_PASSWORD: book_management_user_pass
       DATABASE_NAME: book_management_db
+      DATABASE_URL: mongodb://localhost:27017
 
     steps:
       - name: Checkout repository
@@ -56,7 +57,7 @@ jobs:
           DATABASE_USERNAME: ${{ env.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ env.DATABASE_NAME }}
-          MONGO_URI: ${{ env.MONGO_URI }}
+          DATABASE_URL: ${{ env.DATABASE_URL }}
 
       - name: Run E2E Tests
         run: npm run test:e2e
@@ -67,4 +68,4 @@ jobs:
           DATABASE_USERNAME: ${{ env.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ env.DATABASE_NAME }}
-          MONGO_URI: ${{ env.MONGO_URI }}
+          DATABASE_URL: ${{ env.DATABASE_URL }}
