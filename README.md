@@ -41,7 +41,7 @@ This project can be run entirely using Docker and Docker Compose. Follow these s
 
 ---
 
-### 1. Clone the repository
+### 1. Clone the repository & Run using docker
 
 ```bash
 git clone https://github.com/fuadashraful/book-management-api.git
@@ -53,12 +53,26 @@ sudo docker compose up --build
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repository & Run Locally (Please make sure mongodb is available or running using docker):
 
 ```bash
-git clone https://github.com/your-username/book-management.git
+git clone https://github.com/fuadashraful/book-management-api.git
+
 cd book-management
+
 npm install
+
+npm start
+```
+## Running Tests
+
+### Unit Tests
+```bash
+npm run test:unit
+```
+### E2E Tests
+```bash
+npm run test:e2e
 ```
 
 ## API Documentation (Swagger)
