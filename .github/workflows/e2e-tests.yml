@@ -1,0 +1,45 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:8.0.15-noble
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: book_management_api_user
+          MONGO_INITDB_ROOT_PASSWORD: book_management_user_pass
+          MONGO_INITDB_DATABASE: book_management_db
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for MongoDB to be ready
+        run: |
+          for i in {1..10}; do
+            mongosh "$MONGO_URI" --eval "db.adminCommand({ ping: 1 })" && break
+            echo "Waiting for MongoDB..."
+            sleep 3
+          done
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          MONGO_URI: ${{ env.MONGO_URI }}
