@@ -12,6 +12,6 @@
     "!src/**/*.module.ts",
     "!src/main.ts"
   ],
-  "coverageDirectory": "coverage",
+  "coverageDirectory": "../coverage",
   "testTimeout": 30000
 }
