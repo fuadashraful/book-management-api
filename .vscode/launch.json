@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug NestJS (TS)",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "args": ["src/main.ts"],
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector",
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/**/*.ts"]
+    },
+    {
+      "name": "Debug NestJS (compiled JS)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/dist/main.js",
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector",
+      "console": "integratedTerminal"
+    }
+  ]
+}

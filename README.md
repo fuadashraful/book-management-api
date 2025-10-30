@@ -31,33 +31,25 @@ This project is ideal for applications that require library management, book cat
 - **Dependency Injection:** NestJS DI container  
 
 ---
+## Using the Application with Docker
 
-## Database Schema
+This project can be run entirely using Docker and Docker Compose. Follow these steps:
 
-**Book**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | string | Unique identifier |
-| title | string | Title of the book |
-| isbn | string | Unique ISBN number |
-| publishedDate | Date | Optional publication date |
-| genre | string | Optional genre |
-| authorId | string | Reference to the author |
-| createdAt | Date | Auto-generated timestamp |
-| updatedAt | Date | Auto-generated timestamp |
-
-**Author**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | string | Unique identifier |
-| firstName | string | Author first name |
-| lastName | string | Author last name |
-| createdAt | Date | Auto-generated timestamp |
-| updatedAt | Date | Auto-generated timestamp |
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) installed
+- [Docker Compose](https://docs.docker.com/compose/install/) installed
 
 ---
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/fuadashraful/book-management-api.git
+
+cd book-management
+
+sudo docker compose up --build
+```
 
 ## Installation
 
