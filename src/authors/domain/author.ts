@@ -10,7 +10,11 @@ export class Author {
   @ApiProperty({ type: String, example: 'Fuad' })
   lastName: string | null;
 
-  @ApiProperty({ type: String, example: 'Biography of the author', required: false })
+  @ApiProperty({
+    type: String,
+    example: 'Biography of the author',
+    required: false,
+  })
   bio?: string | null;
 
   @ApiProperty({ type: Date, required: false })

@@ -26,7 +26,10 @@ export class QueryAuthorDto {
   @Min(1)
   page?: number = 1;
 
-  @ApiPropertyOptional({ example: 10, description: 'Number of results per page' })
+  @ApiPropertyOptional({
+    example: 10,
+    description: 'Number of results per page',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

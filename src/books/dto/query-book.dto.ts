@@ -27,7 +27,10 @@ export class QueryBookDto {
   @IsString()
   authorId?: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Page number for pagination' })
+  @ApiPropertyOptional({
+    example: 1,
+    description: 'Page number for pagination',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

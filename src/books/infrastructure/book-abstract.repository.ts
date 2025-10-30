@@ -3,9 +3,7 @@ import { Book } from 'src/books/domain/book';
 import { QueryBookDto } from 'src/books/dto/query-book.dto';
 
 export abstract class BookRepository {
-  abstract create(
-    data: Partial<Book>,
-  ): Promise<Book>;
+  abstract create(data: Partial<Book>): Promise<Book>;
 
   abstract findByIsbn(isbn: string): Promise<NullableType<Book>>;
 

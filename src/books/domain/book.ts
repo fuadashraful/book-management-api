@@ -5,7 +5,11 @@ export class Book {
   @ApiProperty({ type: String, description: 'Unique identifier for the book' })
   id: string;
 
-  @ApiProperty({ type: String, example: 'The Art of Coding', description: 'Title of the book' })
+  @ApiProperty({
+    type: String,
+    example: 'The Art of Coding',
+    description: 'Title of the book',
+  })
   title: string;
 
   @ApiProperty({

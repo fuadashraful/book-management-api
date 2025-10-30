@@ -59,6 +59,7 @@ sudo docker compose up --build
 git clone https://github.com/fuadashraful/book-management-api.git
 
 cd book-management
+cp .env.example .env # After copy update env variables where necessary
 
 npm install
 
